@@ -28,28 +28,29 @@ import XCTest
 
 class TypedNotificationTests: XCTestCase {
 
-    enum TestNotification: TypedNotification {
-        case event(String)
+    private var token: NotificationToken?
+
+    struct TestNotification: TypedNotification {
+        var value: String
+    }
+
+    override func tearDown() {
+        super.tearDown()
+
+        // Ordinarily this occurs when deallocating the object. Explicitly here to test deregistration.
+        token = nil
     }
 
     func testBehavior() {
         let exp = expectation(description: "notification received")
 
-        let token = NotificationCenter.default.addObserver(for: TestNotification.self) { notification in
-            defer {
-                exp.fulfill()
-            }
-
-            guard case .event(let string) = notification else {
-                XCTFail("Wrong notification received")
-                return
-            }
-
-            XCTAssertEqual(string, "foobar")
+        token = NotificationCenter.default.addObserver(for: TestNotification.self, queue: .main) { notification in
+            XCTAssertEqual(notification.value, "foobar")
+            exp.fulfill()
         }
 
         DispatchQueue.global(qos: .background).async {
-            NotificationCenter.default.post(TestNotification.event("foobar"), from: self)
+            NotificationCenter.default.post(TestNotification(value: "foobar"), from: self)
         }
 
         wait(for: [exp], timeout: 5)
