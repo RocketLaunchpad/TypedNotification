@@ -11,7 +11,8 @@ let package = Package(
         .library(name: "TypedNotification", targets: ["TypedNotification"])
     ],
     targets: [
-        .target(name: "TypedNotification")
+        .target(name: "TypedNotification"),
+        .testTarget(name: "TypedNotificationTests", dependencies: ["TypedNotification"])
     ]
 )
 
