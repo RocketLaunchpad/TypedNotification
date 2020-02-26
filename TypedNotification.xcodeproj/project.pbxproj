@@ -68,6 +68,7 @@
 		C52A636222F71F7900A0F7BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C52A636722F71FD200A0F7BA /* TypedNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypedNotification.swift; sourceTree = "<group>"; };
 		C5A4599D2333C273002C2448 /* TestNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNotification.swift; sourceTree = "<group>"; };
+		C7602777234CDB9B00F62FDD /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +108,7 @@
 		C52A632922F71EB900A0F7BA = {
 			isa = PBXGroup;
 			children = (
+				C7602777234CDB9B00F62FDD /* Package.swift */,
 				C52A634E22F71F3800A0F7BA /* Sources */,
 				C52A634F22F71F4200A0F7BA /* Tests */,
 				C52A636622F71F7E00A0F7BA /* Examples */,
