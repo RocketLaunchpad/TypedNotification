@@ -55,4 +55,61 @@ class TypedNotificationTests: XCTestCase {
 
         wait(for: [exp], timeout: 5)
     }
+
+    func testFilter() {
+        let exp = expectation(description: "notification received")
+
+        // Filter out TestNotification instances with value == "drop"
+        token = NotificationCenter.default.addObserver(for: TestNotification.self, queue: .main, filter: {
+            $0.value != "drop"
+        }) { notification in
+            XCTAssertEqual(notification.value, "keep")
+            exp.fulfill()
+        }
+
+        DispatchQueue.global(qos: .background).async {
+            NotificationCenter.default.post(TestNotification(value: "drop"), from: self)
+            NotificationCenter.default.post(TestNotification(value: "keep"), from: self)
+        }
+
+        wait(for: [exp], timeout: 5)
+    }
+
+    func testMap() {
+        let exp = expectation(description: "notification received")
+
+        // Map from TestNotification to String
+        token = NotificationCenter.default.addObserver(for: TestNotification.self, queue: .main, map: { $0.value }) { value in
+            XCTAssertEqual(value, "foobar")
+            exp.fulfill()
+        }
+
+        DispatchQueue.global(qos: .background).async {
+            NotificationCenter.default.post(TestNotification(value: "foobar"), from: self)
+        }
+
+        wait(for: [exp], timeout: 5)
+    }
+
+    func testCompactMap() {
+        let exp = expectation(description: "notification received")
+
+        // Map from TestNotification to String, filtering out TestNotification instances with value == "drop"
+        token = NotificationCenter.default.addObserver(for: TestNotification.self, queue: .main, compactMap: { (notification) -> String? in
+            guard notification.value != "drop" else {
+                return nil
+            }
+            return notification.value
+        }) { value in
+            XCTAssertEqual(value, "keep")
+            exp.fulfill()
+        }
+
+        DispatchQueue.global(qos: .background).async {
+            NotificationCenter.default.post(TestNotification(value: "drop"), from: self)
+            NotificationCenter.default.post(TestNotification(value: "keep"), from: self)
+        }
+
+        wait(for: [exp], timeout: 5)
+    }
 }
