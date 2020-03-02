@@ -131,7 +131,6 @@ extension NotificationCenter {
      - Returns:
          A `NotificationToken` object. The observer is automatically deregistered when this token object is deallocated, so be sure to retain a reference to it.
      */
-
     public func addObserver<T: TypedNotification>(for type: T.Type,
                                                   object: Any? = nil,
                                                   queue: OperationQueue? = nil,
@@ -146,6 +145,90 @@ extension NotificationCenter {
         }
 
         return NotificationToken(token: token, center: self)
+    }
+
+    /**
+     Filters incoming notifications, delivering only those that pass the `filter` block.
+
+     This works similarly to `addObserver(for:object:queue:using:)` except that every incoming notification is passed to the `filter` block. If that block returns `true`, the handler block (i.e., the `using` parameter block) will be invoked.
+
+     - Parameters:
+         - for: the `TypedNotification` subtype
+         - object: The object from which you want to receive notifications. Pass `nil` to receive all notifications.
+         - queue: The queue on which to execute the block. Per `NotificationCenter` documentation, if you pass `nil`, the block is run synchronously on the posting thread.
+         - filter: Filters incoming notifications. If `true` is returned, the notification is passed to `block`. If `false` is returned, the notification is dropped.
+         - block: The block to be executed when the notification is received. The block takes a single instance of the `type` as an argument.
+
+     - Returns:
+         A `NotificationToken` object. The observer is automatically deregistered when this token object is deallocated, so be sure to retain a reference to it.
+     */
+    public func addObserver<T: TypedNotification>(for type: T.Type,
+                                                  object: Any? = nil,
+                                                  queue: OperationQueue? = nil,
+                                                  filter: @escaping (T) -> Bool,
+                                                  using block: @escaping (T) -> Void) -> NotificationToken {
+
+        return addObserver(for: type, object: object, queue: queue) { notification in
+            guard filter(notification) else {
+                return
+            }
+            block(notification)
+        }
+    }
+
+    /**
+     Transforms incoming notifications.
+
+     This works similarly to `addObserver(for:object:queue:using:)` except that every incoming notification is passed to the `map` block. The result of the `map` block is passed to the handler block (i.e., the `using` parameter block).
+
+     - Parameters:
+         - for: the `TypedNotification` subtype
+         - object: The object from which you want to receive notifications. Pass `nil` to receive all notifications.
+         - queue: The queue on which to execute the block. Per `NotificationCenter` documentation, if you pass `nil`, the block is run synchronously on the posting thread.
+         - map: Transforms incoming notifications.
+         - block: The block to be executed when the notification is received. The block takes a single instance of the output type of `map` as an argument.
+
+     - Returns:
+         A `NotificationToken` object. The observer is automatically deregistered when this token object is deallocated, so be sure to retain a reference to it.
+     */
+    public func addObserver<T: TypedNotification, V>(for type: T.Type,
+                                                     object: Any? = nil,
+                                                     queue: OperationQueue? = nil,
+                                                     map transform: @escaping (T) -> V,
+                                                     using block: @escaping (V) -> Void) -> NotificationToken {
+
+        return addObserver(for: type, object: object, queue: queue) { notification in
+            block(transform(notification))
+        }
+    }
+
+    /**
+     Transforms incoming notifications, filtering out `nil` values.
+
+     This works similarly to `addObserver(for:object:queue:using:)` except that every incoming notification is passed to the `compactMap` block. Non-nil results of the `compactMap` block are passed to the handler block (i.e., the `using` parameter block).
+
+     - Parameters:
+         - for: the `TypedNotification` subtype
+         - object: The object from which you want to receive notifications. Pass `nil` to receive all notifications.
+         - queue: The queue on which to execute the block. Per `NotificationCenter` documentation, if you pass `nil`, the block is run synchronously on the posting thread.
+         - compactMap: Transforms incoming notifications.  If a non-nil value is returned, that value is passed to `block`. If `nil` is returned, the notification is dropped.
+         - block: The block to be executed when the notification is received. The block takes a single instance of the non-optional output type of `compactMap` as an argument.
+
+     - Returns:
+         A `NotificationToken` object. The observer is automatically deregistered when this token object is deallocated, so be sure to retain a reference to it.
+     */
+    public func addObserver<T: TypedNotification, V>(for type: T.Type,
+                                                     object: Any? = nil,
+                                                     queue: OperationQueue? = nil,
+                                                     compactMap transform: @escaping (T) -> V?,
+                                                     using block: @escaping (V) -> Void) -> NotificationToken {
+
+        return addObserver(for: type, object: object, queue: queue) { notification in
+            guard let value = transform(notification) else {
+                return
+            }
+            block(value)
+        }
     }
 
     /**
