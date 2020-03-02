@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
   s.name = "RITypedNotification"
   s.module_name = "TypedNotification"
-  s.version = "1.0.1"
+  s.version = "1.1.0"
   s.summary = "RITypedNotification Library"
 
   s.description = <<-DESC
