@@ -1,8 +1,8 @@
 //
-//  TypedNotification.h
-//  TypedNotification
+//  TestNotification.swift
+//  TypedNotificationExample
 //
-//  Copyright (c) 2019 Rocket Insights, Inc.
+//  Copyright (c) 2019-2020 Rocket Insights, Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a
 //  copy of this software and associated documentation files (the "Software"),
@@ -23,12 +23,14 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-#import <Foundation/Foundation.h>
+import Foundation
+import TypedNotification
 
-//! Project version number for TypedNotification.
-FOUNDATION_EXPORT double TypedNotificationVersionNumber;
+enum TestNotification: TypedNotification {
 
-//! Project version string for TypedNotification.
-FOUNDATION_EXPORT const unsigned char TypedNotificationVersionString[];
+    case eventA
 
-// In this header, you should import all the public headers of your framework using statements like #import <TypedNotification/PublicHeader.h>
+    case eventB
+
+    case eventC
+}

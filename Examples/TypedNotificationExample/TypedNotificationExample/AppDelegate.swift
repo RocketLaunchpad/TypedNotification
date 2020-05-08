@@ -1,8 +1,8 @@
 //
-//  TestNotification.swift
-//  TypedNotification
+//  AppDelegate.swift
+//  TypedNotificationExample
 //
-//  Copyright (c) 2019 Rocket Insights, Inc.
+//  Copyright (c) 2019-2020 Rocket Insights, Inc.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a
 //  copy of this software and associated documentation files (the "Software"),
@@ -23,14 +23,15 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
-import Foundation
-import TypedNotification
+import UIKit
 
-enum TestNotification: TypedNotification {
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    case eventA
+    var window: UIWindow?
 
-    case eventB
-
-    case eventC
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // Override point for customization after application launch.
+        return true
+    }
 }
