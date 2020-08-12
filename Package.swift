@@ -35,6 +35,7 @@ let package = Package(
     products: [
         .library(
             name: "TypedNotification",
+            type: .dynamic,
             targets: ["TypedNotification"]),
     ],
     targets: [
