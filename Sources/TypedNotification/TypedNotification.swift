@@ -46,7 +46,7 @@ extension TypedNotification {
     }
 
     /// The name of the notification for Foundation methods. Defaults to the value of the static `name` field.
-    static var notificationName: Notification.Name {
+    public static var notificationName: Notification.Name {
         return Notification.Name(Self.name)
     }
 
