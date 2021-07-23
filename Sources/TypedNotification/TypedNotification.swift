@@ -54,6 +54,13 @@ extension TypedNotification {
     func notification(withSender sender: Any) -> Notification {
         return Notification(name: Self.notificationName, object: sender, userInfo: [kNotificationKey: self])
     }
+
+    public static func unpack(from notification: Notification) -> Self? {
+        guard let typedNotification = notification.userInfo?[kNotificationKey] as? Self else {
+            return nil
+        }
+        return typedNotification
+    }
 }
 
 /// An opaque `NotificationToken` used to add and remove observers of typed notifications. The object retains the token returned by `NotificationCenter.addObserver(for:object:queue:)` as well as the `NotificationCenter`. When the object is deallocated, we deregister the observer from the retained `NotificationCenter` using the retained token.
@@ -137,7 +144,7 @@ extension NotificationCenter {
                                                   using block: @escaping (T) -> Void) -> NotificationToken {
 
         let token = addObserver(forName: T.notificationName, object: object, queue: queue) { (notification) in
-            guard let typedNotification = notification.userInfo?[kNotificationKey] as? T else {
+            guard let typedNotification = T.unpack(from: notification) else {
                 return
             }
 
