@@ -37,13 +37,20 @@ let package = Package(
             name: "TypedNotification",
             type: .dynamic,
             targets: ["TypedNotification"]),
+        .library(
+            name: "TypedNotificationTestHelpers",
+            type: .dynamic,
+            targets: ["TypedNotificationTestHelpers"])
     ],
     targets: [
         .target(
             name: "TypedNotification",
             dependencies: []),
+        .target(
+            name: "TypedNotificationTestHelpers",
+            dependencies: ["TypedNotification"]),
         .testTarget(
             name: "TypedNotificationTests",
-            dependencies: ["TypedNotification"])
+            dependencies: ["TypedNotification", "TypedNotificationTestHelpers"])
     ]
 )

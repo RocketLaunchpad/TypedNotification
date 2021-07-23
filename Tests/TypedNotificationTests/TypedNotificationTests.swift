@@ -24,6 +24,7 @@
 //
 
 import TypedNotification
+import TypedNotificationTestHelpers
 import XCTest
 
 class TypedNotificationTests: XCTestCase {
@@ -42,11 +43,10 @@ class TypedNotificationTests: XCTestCase {
     }
 
     func testBehavior() {
-        let exp = expectation(description: "notification received")
-
-        token = NotificationCenter.default.addObserver(for: TestNotification.self, queue: .main) { notification in
-            XCTAssertEqual(notification.value, "foobar")
-            exp.fulfill()
+        let exp = TypedNotificationExpectation(for: TestNotification.self)
+        exp.typedHandler = {
+            XCTAssertEqual($0.value, "foobar")
+            return true
         }
 
         DispatchQueue.global(qos: .background).async {
