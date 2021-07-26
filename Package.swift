@@ -35,10 +35,16 @@ let package = Package(
     products: [
         .library(
             name: "TypedNotification",
-            type: .dynamic,
             targets: ["TypedNotification"]),
         .library(
             name: "TypedNotificationTestHelpers",
+            targets: ["TypedNotificationTestHelpers"]),
+        .library(
+            name: "TypedNotification-Dynamic",
+            type: .dynamic,
+            targets: ["TypedNotification"]),
+        .library(
+            name: "TypedNotificationTestHelpers-Dynamic",
             type: .dynamic,
             targets: ["TypedNotificationTestHelpers"])
     ],
