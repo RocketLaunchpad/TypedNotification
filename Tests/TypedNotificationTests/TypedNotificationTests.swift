@@ -23,6 +23,7 @@
 //  DEALINGS IN THE SOFTWARE.
 //
 
+import Combine
 import TypedNotification
 import TypedNotificationTestHelpers
 import XCTest
@@ -31,6 +32,8 @@ class TypedNotificationTests: XCTestCase {
 
     private var token: NotificationToken?
 
+    private var cancellable: AnyCancellable?
+
     struct TestNotification: TypedNotification {
         var value: String
     }
@@ -38,8 +41,8 @@ class TypedNotificationTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
 
-        // Ordinarily this occurs when deallocating the object. Explicitly here to test deregistration.
         token = nil
+        cancellable = nil
     }
 
     func testBehavior() {
@@ -111,5 +114,24 @@ class TypedNotificationTests: XCTestCase {
         }
 
         wait(for: [exp], timeout: 5)
+    }
+
+    func testPublisher() {
+        let exp = expectation(description: "notification received")
+        var receivedValue: String? = nil
+
+        cancellable = NotificationCenter.default
+            .publisher(for: TestNotification.self)
+            .sink(receiveValue: { (note: TestNotification) in
+                receivedValue = note.value
+                exp.fulfill()
+            })
+
+        DispatchQueue.global(qos: .background).async {
+            NotificationCenter.default.post(TestNotification(value: "Combine testing"), from: self)
+        }
+
+        wait(for: [exp], timeout: 5)
+        XCTAssertEqual(receivedValue, "Combine testing")
     }
 }
